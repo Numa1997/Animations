@@ -141,9 +141,47 @@ streamlit run streamlit_app.py
 
 See `PHASE_3_COMPLETE.md` for complete documentation.
 
+### Multi-Ball Chaos Studies (Phase 4)
+
+Explore collective divergence with multi-ball ensembles:
+
+```bash
+# Basic 4-ball study with circular arrangement
+python3 generate_multi_ball_study.py
+
+# 6 balls, linear arrangement
+python3 generate_multi_ball_study.py --n-balls 6 --arrangement linear
+
+# 8 balls, steep parabola, extended time
+python3 generate_multi_ball_study.py --n-balls 8 --a 1.0 --t-max 30
+
+# High-quality MP4 animation
+python3 generate_multi_ball_study.py --n-balls 4 --fps 60 --format mp4
+
+# Help
+python3 generate_multi_ball_study.py --help
+```
+
+**Features**:
+- **Symmetric arrangements**: Circular or linear initial configurations
+- **Color-coded visualization**: Rainbow-mapped trajectories for each ball
+- **Pairwise divergence**: Heat maps showing all ball-to-ball divergence times
+- **Ensemble statistics**: Centroid tracking, spread analysis, bounce distribution
+- **Advanced chaos metrics**: Lyapunov exponent estimation, spreading rate
+- **Comprehensive output**: 4-panel static analysis + animated visualization
+
+**Visualizations**:
+- Color-coded trajectories on parameterized parabola
+- Pairwise divergence heat map
+- Ensemble spread vs time (log scale)
+- Chaos metrics dashboard
+
+See `PHASE_4_COMPLETE.md` for complete documentation.
+
 ### Documentation
 
 - `PHASE_1_COMPLETE.md` - Parameterized parabola implementation
 - `PHASE_2_COMPLETE.md` - Extended video generation capabilities
 - `PHASE_3_COMPLETE.md` - Interactive Streamlit dashboard
+- `PHASE_4_COMPLETE.md` - Multi-ball chaos visualizations
 - See individual folder READMEs for detailed component information
