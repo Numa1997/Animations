@@ -26,7 +26,8 @@ class ComparisonVideoGenerator:
     def create_side_by_side_video(self, result, fps: int = 60,
                                   duration: float = 15.0,
                                   save_path: Optional[str] = None,
-                                  format: str = 'mp4'):
+                                  format: str = 'mp4',
+                                  a: float = 1.0):
         """
         Create side-by-side comparison video with analysis panels.
 
@@ -47,6 +48,8 @@ class ComparisonVideoGenerator:
             Path to save video
         format : str
             'mp4', 'gif', or 'html5'
+        a : float
+            Parabola steepness parameter (y = a*x²)
         """
         traj1 = result.trajectory_1
         traj2 = result.trajectory_2
@@ -68,8 +71,9 @@ class ComparisonVideoGenerator:
 
         # Setup main trajectory plot
         x_para = np.linspace(-3, 3, 500)
-        y_para = x_para**2
-        ax_main.plot(x_para, y_para, 'g-', linewidth=2, alpha=0.5, label='Parabola')
+        y_para = a * x_para**2
+        parabola_label = f'Parabola: y={a}x²' if a != 1.0 else 'Parabola: y=x²'
+        ax_main.plot(x_para, y_para, 'g-', linewidth=2, alpha=0.5, label=parabola_label)
         ax_main.fill_between(x_para, 0, y_para, alpha=0.1, color='green')
 
         ball1_main, = ax_main.plot([], [], 'o', color='#1f77b4', markersize=14,

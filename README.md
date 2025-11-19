@@ -85,6 +85,35 @@ See **`outputs/examples/`** for example results from a complete study run:
 
 All outputs (plots, animations, data, reports) are generated in timestamped directories under `outputs/`.
 
+### Extended Video Generation (Phase 2)
+
+Generate high-quality, extended-duration videos with full parameter control:
+
+```bash
+# Quick extended video (60s, MP4, 60 FPS)
+python3 generate_videos.py 1e-3 0.3 --extended
+
+# Custom parameters
+python3 generate_videos.py 1e-3 0.3 --t-max 90 --duration 80 --fps 60 --format mp4
+
+# Batch generation (parallel)
+python3 batch_generate_videos.py --separations "1e-3,5e-4,1e-4" --extended --workers 3
+
+# Help and options
+python3 generate_videos.py --help
+python3 batch_generate_videos.py --help
+```
+
+**Features**:
+- **Extended duration**: 60+ second simulations and videos
+- **High quality**: MP4 format with 60 FPS
+- **Batch processing**: Generate multiple videos in parallel
+- **Full control**: Configure FPS, duration, format, parabola steepness
+
+See `PHASE_2_COMPLETE.md` for complete documentation.
+
 ### Documentation
 
-See individual folder READMEs for detailed information about each component.
+- `PHASE_1_COMPLETE.md` - Parameterized parabola implementation
+- `PHASE_2_COMPLETE.md` - Extended video generation capabilities
+- See individual folder READMEs for detailed component information
