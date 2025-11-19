@@ -43,6 +43,8 @@ outputs/reports/*
 outputs/visuals/*
 outputs/simulations/*
 outputs/parameter_space/*
+outputs/multi_ball/*
+outputs/videos/*
 
 # But keep the README files
 !outputs/reports/README.md
