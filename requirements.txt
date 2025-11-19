@@ -17,8 +17,9 @@ pyyaml>=5.4.0
 # Symbolic math (optional)
 sympy>=1.8.0
 
-# Interactive plots (optional)
+# Interactive plots and dashboard (Phase 3)
 plotly>=5.0.0
+streamlit>=1.28.0
 
 # Animation (optional, for advanced visualizations)
 # manim>=0.15.0  # Uncomment if using Manim

@@ -112,8 +112,38 @@ python3 batch_generate_videos.py --help
 
 See `PHASE_2_COMPLETE.md` for complete documentation.
 
+### Interactive Dashboard (Phase 3)
+
+Explore chaos interactively with the Streamlit web dashboard:
+
+```bash
+# Launch the interactive dashboard
+./run_dashboard.sh
+# or
+streamlit run streamlit_app.py
+
+# Opens in browser at http://localhost:8501
+```
+
+**Features**:
+- **Single simulation mode**: Interactive parameter exploration with real-time visualization
+- **Parameter sweep mode**: Automated studies across parameter ranges
+- **Interactive Plotly charts**: Zoom, pan, hover for detailed analysis
+- **SQLite caching**: Intelligent results caching for instant retrieval
+- **Two sweep modes**: Initial separation or parabola steepness
+- **Export results**: Download data tables and plots
+
+**Visualizations**:
+- Trajectory plots with animated parabola
+- Log-scale separation vs time
+- Phase space portraits (x vs vₓ)
+- Parameter sweep analysis
+
+See `PHASE_3_COMPLETE.md` for complete documentation.
+
 ### Documentation
 
 - `PHASE_1_COMPLETE.md` - Parameterized parabola implementation
 - `PHASE_2_COMPLETE.md` - Extended video generation capabilities
+- `PHASE_3_COMPLETE.md` - Interactive Streamlit dashboard
 - See individual folder READMEs for detailed component information
