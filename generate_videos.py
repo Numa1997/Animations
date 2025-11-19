@@ -23,8 +23,19 @@ from comparison_video_generator import ComparisonVideoGenerator
 from matplotlib_bouncing_balls import BouncingBallsVisualizer
 
 
-def generate_videos(delta_x=1e-4, output_dir='outputs/videos'):
-    """Generate all video formats for a given separation."""
+def generate_videos(delta_x=1e-4, a=0.3, output_dir='outputs/videos'):
+    """
+    Generate all video formats for a given separation.
+
+    Parameters
+    ----------
+    delta_x : float
+        Initial separation between balls
+    a : float
+        Parabola steepness parameter (y = a*x²)
+    output_dir : str
+        Output directory path
+    """
 
     print("=" * 70)
     print("🎬 VIDEO GENERATOR - Bouncing Balls Divergence Study")
@@ -37,11 +48,12 @@ def generate_videos(delta_x=1e-4, output_dir='outputs/videos'):
 
     print(f"📁 Output directory: {output_dir}")
     print(f"🎯 Initial separation: δx = {delta_x:.2e} m")
+    print(f"🎯 Parabola parameter: a = {a} (y = {a}x²)")
     print()
 
     # Run simulation
     print("🔄 Running simulation...")
-    study = DivergenceStudy(threshold_factor=100.0, tolerance_abs=1e-12)
+    study = DivergenceStudy(a=a, threshold_factor=100.0, tolerance_abs=1e-12)
 
     result = study.simulate_pair(
         x1_0=-2.0,
@@ -115,20 +127,29 @@ def generate_videos(delta_x=1e-4, output_dir='outputs/videos'):
 
 
 if __name__ == '__main__':
-    # Parse command line argument
+    # Parse command line arguments
     if len(sys.argv) > 1:
         try:
             delta_x = float(sys.argv[1])
         except ValueError:
             print(f"Error: Invalid delta_x value: {sys.argv[1]}")
-            print("Usage: python3 generate_videos.py [delta_x]")
-            print("Example: python3 generate_videos.py 1e-3")
+            print("Usage: python3 generate_videos.py [delta_x] [a]")
+            print("Example: python3 generate_videos.py 1e-3 0.3")
             sys.exit(1)
     else:
         delta_x = 1e-4  # Default
 
+    if len(sys.argv) > 2:
+        try:
+            a = float(sys.argv[2])
+        except ValueError:
+            print(f"Error: Invalid 'a' value: {sys.argv[2]}")
+            sys.exit(1)
+    else:
+        a = 0.3  # Default to flatter parabola
+
     try:
-        result = generate_videos(delta_x)
+        result = generate_videos(delta_x, a)
         sys.exit(0)
     except Exception as e:
         print(f"\n❌ Error: {e}")

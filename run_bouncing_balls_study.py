@@ -61,6 +61,7 @@ class BouncingBallsStudyRunner:
         # Initialize study
         self.study = DivergenceStudy(
             g=self.params['physics']['g'],
+            a=self.params['physics'].get('a', 1.0),  # Default to 1.0 for backward compat
             threshold_factor=self.params['divergence']['threshold_factor'],
             tolerance_abs=self.params['simulation']['tolerance_abs'],
             tolerance_rel=self.params['simulation']['tolerance_rel']
@@ -84,6 +85,7 @@ class BouncingBallsStudyRunner:
         print(f"Initial conditions (Ball 1):")
         print(f"  Position: ({x1_0}, {y1_0}) m")
         print(f"  Velocity: ({vx1_0}, {vy1_0}) m/s")
+        print(f"  Parabola: y = {self.params['physics'].get('a', 1.0)}x²")
         print()
 
         # Get separation range

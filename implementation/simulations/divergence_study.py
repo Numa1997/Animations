@@ -40,7 +40,8 @@ class DivergenceStudy:
     Study divergence dynamics for pairs of bouncing balls.
     """
 
-    def __init__(self, g: float = 9.80665, threshold_factor: float = 100.0,
+    def __init__(self, g: float = 9.80665, a: float = 1.0,
+                 threshold_factor: float = 100.0,
                  tolerance_abs: float = 1e-12, tolerance_rel: float = 1e-10):
         """
         Initialize divergence study.
@@ -49,15 +50,19 @@ class DivergenceStudy:
         ----------
         g : float
             Gravitational acceleration
+        a : float
+            Parabola steepness parameter (y = a*x²)
         threshold_factor : float
             Divergence threshold: d(t) > threshold_factor × d(0)
         tolerance_abs, tolerance_rel : float
             Integration tolerances
         """
         self.g = g
+        self.a = a
         self.threshold_factor = threshold_factor
         self.solver = BouncingBallSolver(
             g=g,
+            a=a,
             tolerance_abs=tolerance_abs,
             tolerance_rel=tolerance_rel
         )
@@ -135,7 +140,7 @@ class DivergenceStudy:
 
             if t1_collision is not None:
                 state1 = state1_array[:, -1]
-                if is_approaching(state1):
+                if is_approaching(state1, self.a):
                     bounces_1.append((t1_collision, state1[:2].copy()))
                     state1 = self.solver.apply_collision(state1)
 
@@ -150,7 +155,7 @@ class DivergenceStudy:
 
             if t2_collision is not None:
                 state2 = state2_array[:, -1]
-                if is_approaching(state2):
+                if is_approaching(state2, self.a):
                     bounces_2.append((t2_collision, state2[:2].copy()))
                     state2 = self.solver.apply_collision(state2)
             else:
@@ -290,7 +295,8 @@ if __name__ == '__main__':
     print("Testing DivergenceStudy")
     print("-" * 50)
 
-    study = DivergenceStudy(threshold_factor=100.0)
+    # Test with flatter parabola
+    study = DivergenceStudy(a=0.3, threshold_factor=100.0)
 
     # Test a single pair
     print("\nSingle pair test:")

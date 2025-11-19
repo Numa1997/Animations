@@ -23,16 +23,25 @@ from bouncing_balls_equations import (
 
 class BouncingBallSolver:
     """
-    Solver for a single ball bouncing on parabola y = x².
+    Solver for a single ball bouncing on parameterized parabola y = a*x².
 
     Handles:
     - Free fall integration between bounces
     - Collision detection using event-based methods
     - Elastic reflection at collisions
     - Energy conservation tracking
+
+    Parameters
+    ----------
+    a : float
+        Parabola steepness parameter (default 1.0)
+        - a = 1.0: Standard parabola
+        - a < 1.0: Flatter curve
+        - a > 1.0: Steeper curve
     """
 
-    def __init__(self, g: float = 9.80665, tolerance_abs: float = 1e-12,
+    def __init__(self, g: float = 9.80665, a: float = 1.0,
+                 tolerance_abs: float = 1e-12,
                  tolerance_rel: float = 1e-10, max_step: float = 0.01):
         """
         Initialize solver.
@@ -41,6 +50,8 @@ class BouncingBallSolver:
         ----------
         g : float
             Gravitational acceleration (m/s²)
+        a : float
+            Parabola steepness parameter
         tolerance_abs : float
             Absolute tolerance for integration
         tolerance_rel : float
@@ -49,6 +60,7 @@ class BouncingBallSolver:
             Maximum integration step size (s)
         """
         self.g = g
+        self.a = a
         self.tolerance_abs = tolerance_abs
         self.tolerance_rel = tolerance_rel
         self.max_step = max_step
@@ -92,7 +104,7 @@ class BouncingBallSolver:
         """
         # Define event function for collision
         def event_func(t, state):
-            return collision_event(t, state, self.g)
+            return collision_event(t, state, self.g, self.a)
 
         # Only trigger on approaching collisions
         event_func.direction = -1  # Negative crossing
@@ -100,7 +112,7 @@ class BouncingBallSolver:
 
         # Integrate
         sol = solve_ivp(
-            fun=lambda t, state: free_fall_derivatives(t, state, self.g),
+            fun=lambda t, state: free_fall_derivatives(t, state, self.g, self.a),
             t_span=(t_start, t_end),
             y0=state0,
             method='DOP853',  # High-order Runge-Kutta
@@ -138,7 +150,7 @@ class BouncingBallSolver:
         x, y, vx, vy = state
 
         # Compute reflected velocities
-        vx_new, vy_new = reflect_velocity(vx, vy, x)
+        vx_new, vy_new = reflect_velocity(vx, vy, x, self.a)
 
         # Position unchanged (stays on parabola)
         return np.array([x, y, vx_new, vy_new])
@@ -175,7 +187,7 @@ class BouncingBallSolver:
         bounce_count = 0
 
         # Record initial energy
-        E0 = total_energy(x0, y0, vx0, vy0, g=self.g)
+        E0 = total_energy(x0, y0, vx0, vy0, g=self.g, a=self.a)
 
         while t_current < t_end and bounce_count < max_bounces:
             # Integrate until next collision or t_end
@@ -200,7 +212,7 @@ class BouncingBallSolver:
                 x_c, y_c, vx_c, vy_c = state
 
                 # Check if actually approaching
-                if not is_approaching(state):
+                if not is_approaching(state, self.a):
                     # Spurious collision, continue
                     continue
 
@@ -209,7 +221,7 @@ class BouncingBallSolver:
                 self.bounce_positions.append((x_c, y_c))
 
                 # Check energy before bounce
-                E = total_energy(x_c, y_c, vx_c, vy_c, g=self.g)
+                E = total_energy(x_c, y_c, vx_c, vy_c, g=self.g, a=self.a)
                 self.bounce_energies.append(E)
 
                 # Apply reflection
@@ -217,7 +229,7 @@ class BouncingBallSolver:
 
                 # Verify energy conservation
                 x_c, y_c, vx_new, vy_new = state
-                E_after = total_energy(x_c, y_c, vx_new, vy_new, g=self.g)
+                E_after = total_energy(x_c, y_c, vx_new, vy_new, g=self.g, a=self.a)
 
                 energy_error = abs(E_after - E) / E0
                 if energy_error > 1e-6:
@@ -244,13 +256,13 @@ class BouncingBallSolver:
                 'final': total_energy(
                     self.x_history[-1], self.y_history[-1],
                     self.vx_history[-1], self.vy_history[-1],
-                    g=self.g
+                    g=self.g, a=self.a
                 ),
                 'conservation_error': abs(
                     total_energy(
                         self.x_history[-1], self.y_history[-1],
                         self.vx_history[-1], self.vy_history[-1],
-                        g=self.g
+                        g=self.g, a=self.a
                     ) - E0
                 ) / E0
             }
@@ -260,28 +272,33 @@ class BouncingBallSolver:
 
 
 if __name__ == '__main__':
-    # Test the solver
-    print("Testing BouncingBallSolver")
-    print("-" * 50)
+    # Test the solver with different 'a' values
+    print("Testing BouncingBallSolver with parameterized parabola")
+    print("=" * 60)
 
-    solver = BouncingBallSolver(g=9.80665)
+    for a_val in [0.3, 1.0]:
+        print(f"\n{'='*60}")
+        print(f"Testing with a = {a_val} (parabola: y = {a_val}x²)")
+        print(f"{'='*60}")
 
-    # Drop ball from (-2, 5) at rest
-    result = solver.simulate(
-        x0=-2.0, y0=5.0,
-        vx0=0.0, vy0=0.0,
-        t_end=10.0,
-        max_bounces=50
-    )
+        solver = BouncingBallSolver(g=9.80665, a=a_val)
 
-    print(f"Simulated {len(result['t'])} time points")
-    print(f"Number of bounces: {result['bounces']['count']}")
-    print(f"Energy conservation error: {result['energy']['conservation_error']:.2e}")
-    print(f"Initial energy: {result['energy']['initial']:.4f} J")
-    print(f"Final energy: {result['energy']['final']:.4f} J")
+        # Drop ball from (-2, 5) at rest
+        result = solver.simulate(
+            x0=-2.0, y0=5.0,
+            vx0=0.0, vy0=0.0,
+            t_end=10.0,
+            max_bounces=50
+        )
 
-    print("\nFirst 5 bounces:")
-    for i in range(min(5, len(result['bounces']['times']))):
-        t = result['bounces']['times'][i]
-        x, y = result['bounces']['positions'][i]
-        print(f"  Bounce {i+1}: t={t:.3f}s at (x={x:.3f}, y={y:.3f})")
+        print(f"Simulated {len(result['t'])} time points")
+        print(f"Number of bounces: {result['bounces']['count']}")
+        print(f"Energy conservation error: {result['energy']['conservation_error']:.2e}")
+        print(f"Initial energy: {result['energy']['initial']:.4f} J")
+        print(f"Final energy: {result['energy']['final']:.4f} J")
+
+        print("\nFirst 5 bounces:")
+        for i in range(min(5, len(result['bounces']['times']))):
+            t = result['bounces']['times'][i]
+            x, y = result['bounces']['positions'][i]
+            print(f"  Bounce {i+1}: t={t:.3f}s at (x={x:.3f}, y={y:.3f})")

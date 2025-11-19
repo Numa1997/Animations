@@ -24,11 +24,19 @@ class BouncingBallsVisualizer:
         self.figsize = figsize
         self.dpi = dpi
 
-    def plot_parabola(self, ax, x_range=(-3, 3), **kwargs):
-        """Plot the parabolic boundary."""
+    def plot_parabola(self, ax, x_range=(-3, 3), a=1.0, **kwargs):
+        """
+        Plot the parabolic boundary.
+
+        Parameters
+        ----------
+        a : float
+            Parabola steepness (y = a*x²)
+        """
         x = np.linspace(x_range[0], x_range[1], 500)
-        y = x**2
-        ax.plot(x, y, color='green', linewidth=2, label='Parabola: y=x²', **kwargs)
+        y = a * x**2
+        ax.plot(x, y, color='green', linewidth=2,
+               label=f'Parabola: y={a}x²' if a != 1.0 else 'Parabola: y=x²', **kwargs)
         ax.fill_between(x, 0, y, alpha=0.1, color='green')
 
     def plot_trajectory(self, ax, trajectory: Dict, label: str = '',
