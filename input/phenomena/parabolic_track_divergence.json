@@ -1,0 +1,136 @@
+{
+  "name": "Ball Divergence on Parabolic Track",
+  "description": "Two balls rolling on a parabolic curve y = x² under gravity, starting from nearly identical initial conditions. Study of sensitivity to initial conditions and divergence dynamics.",
+  "category": "Classical Mechanics - Constrained Motion",
+  "difficulty": "Advanced",
+  "keywords": ["chaos", "sensitivity", "constrained motion", "nonlinear dynamics"],
+
+  "governing_laws": [
+    "Newton's Second Law",
+    "Gravitational Force",
+    "Constraint Force (normal to curve)",
+    "Energy Conservation (no friction)"
+  ],
+
+  "curve_definition": {
+    "equation": "y = x²",
+    "type": "parabola",
+    "parametric": {
+      "x": "x(t)",
+      "y": "x(t)²"
+    }
+  },
+
+  "variables": {
+    "x": {
+      "description": "Horizontal position on curve",
+      "symbol": "x",
+      "units": "m"
+    },
+    "v_x": {
+      "description": "Horizontal velocity component",
+      "symbol": "vₓ",
+      "units": "m/s"
+    },
+    "y": {
+      "description": "Vertical position (constrained: y = x²)",
+      "symbol": "y",
+      "units": "m"
+    },
+    "m": {
+      "description": "Mass of ball",
+      "symbol": "m",
+      "units": "kg"
+    },
+    "g": {
+      "description": "Gravitational acceleration",
+      "symbol": "g",
+      "units": "m/s²",
+      "default": 9.80665
+    }
+  },
+
+  "state_space": {
+    "dimension": 2,
+    "coordinates": ["x", "v_x"],
+    "description": "Reduced to 1D motion along curve"
+  },
+
+  "initial_conditions": {
+    "x1_0": {
+      "description": "Initial x-position of ball 1",
+      "default": -2.0,
+      "units": "m"
+    },
+    "v1_0": {
+      "description": "Initial x-velocity of ball 1",
+      "default": 0.0,
+      "units": "m/s"
+    },
+    "x2_0": {
+      "description": "Initial x-position of ball 2 (x1_0 + δx)",
+      "calculated": true,
+      "units": "m"
+    },
+    "v2_0": {
+      "description": "Initial x-velocity of ball 2",
+      "default": 0.0,
+      "units": "m/s"
+    },
+    "delta_x": {
+      "description": "Initial separation between balls",
+      "range": [1e-6, 0.1],
+      "units": "m"
+    }
+  },
+
+  "equations": {
+    "constraint": "y = x²",
+    "equation_of_motion": "ẍ = -[2gx(1 + 4x²)] / (1 + 4x²)",
+    "simplified": "ẍ = -2gx",
+    "total_energy": "E = (1/2)m(ẋ² + ẏ²) + mgy = (1/2)m(1 + 4x²)ẋ² + mgx²"
+  },
+
+  "divergence_definition": {
+    "metric": "euclidean_distance",
+    "description": "Separation in configuration space: d = √[(x₁-x₂)² + (y₁-y₂)²]",
+    "threshold_type": "relative",
+    "threshold_value": 10.0,
+    "criterion": "d(t) > threshold × d(0)"
+  },
+
+  "study_objectives": [
+    "Derive equation of motion for constrained motion on parabola",
+    "Implement numerical integration with high precision",
+    "Define rigorous divergence criterion",
+    "Simulate pairs of balls with varying initial separations",
+    "Compute divergence time as function of initial separation",
+    "Analyze scaling behavior (power law expected)",
+    "Visualize trajectories and divergence dynamics",
+    "Investigate connection to Lyapunov exponents"
+  ],
+
+  "expected_behavior": [
+    "Balls oscillate in the parabolic well",
+    "Small initial separation leads to eventual divergence",
+    "Divergence time should increase as separation decreases",
+    "System exhibits sensitivity to initial conditions",
+    "May exhibit quasi-periodic or chaotic behavior depending on energy"
+  ],
+
+  "visualization_requirements": [
+    "Side-by-side animation of both balls on the parabola",
+    "Trajectory overlay showing paths",
+    "Separation distance vs time for different initial separations",
+    "Divergence time vs initial separation (log-log plot)",
+    "Phase space trajectories (x vs ẋ)",
+    "Energy conservation check"
+  ],
+
+  "parameter_sweep": {
+    "primary_variable": "delta_x",
+    "range": "logarithmic",
+    "num_samples": 20,
+    "secondary_analysis": "dependence on initial position x1_0"
+  }
+}

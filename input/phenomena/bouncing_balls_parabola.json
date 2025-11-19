@@ -1,0 +1,158 @@
+{
+  "name": "Bouncing Balls on Parabolic Curve - Divergence Study",
+  "description": "Two balls falling under gravity and bouncing elastically off a parabolic boundary y = x². Starting from nearly identical initial conditions, we study when and how their trajectories diverge due to the nonlinear bouncing dynamics.",
+  "category": "Classical Mechanics - Collision Dynamics",
+  "difficulty": "Advanced",
+  "keywords": ["chaos", "billiards", "elastic collision", "sensitivity to initial conditions", "divergence dynamics"],
+
+  "governing_laws": [
+    "Free fall under gravity between bounces",
+    "Elastic collision at boundary",
+    "Momentum and energy conservation at collisions"
+  ],
+
+  "system_description": {
+    "boundary": "y = x² (parabolic curve)",
+    "motion_type": "Free ballistic motion with elastic bounces",
+    "between_bounces": "Free fall: ẍ = 0, ÿ = -g",
+    "at_collision": "Elastic reflection off the curve",
+    "collision_type": "Specular reflection (angle in = angle out, relative to normal)"
+  },
+
+  "variables": {
+    "x": {
+      "description": "Horizontal position",
+      "symbol": "x",
+      "units": "m"
+    },
+    "y": {
+      "description": "Vertical position",
+      "symbol": "y",
+      "units": "m"
+    },
+    "vx": {
+      "description": "Horizontal velocity",
+      "symbol": "vₓ",
+      "units": "m/s"
+    },
+    "vy": {
+      "description": "Vertical velocity",
+      "symbol": "vᵧ",
+      "units": "m/s"
+    },
+    "g": {
+      "description": "Gravitational acceleration",
+      "symbol": "g",
+      "units": "m/s²",
+      "default": 9.80665
+    }
+  },
+
+  "state_space": {
+    "dimension": 4,
+    "coordinates": ["x", "y", "vx", "vy"],
+    "description": "Full 2D ballistic motion"
+  },
+
+  "equations": {
+    "free_fall": {
+      "x": "ẍ = 0",
+      "y": "ÿ = -g"
+    },
+    "collision_condition": "y = x²",
+    "normal_vector": "n̂ = (-2x, 1) / √(1 + 4x²)",
+    "elastic_reflection": "v' = v - 2(v · n̂)n̂",
+    "energy_conservation": "E = (1/2)m(vₓ² + vᵧ²) + mgy = constant between bounces"
+  },
+
+  "initial_conditions": {
+    "ball1": {
+      "x1_0": -2.0,
+      "y1_0": 5.0,
+      "vx1_0": 0.0,
+      "vy1_0": 0.0
+    },
+    "ball2": {
+      "x2_0": "x1_0 + δx",
+      "y2_0": "y1_0 + δy",
+      "vx2_0": 0.0,
+      "vy2_0": 0.0
+    },
+    "separation": {
+      "delta_x": "small perturbation in x",
+      "delta_y": 0.0,
+      "range": [1e-6, 0.01]
+    }
+  },
+
+  "divergence_definition": {
+    "metric": "euclidean_2d",
+    "formula": "d(t) = √[(x₁-x₂)² + (y₁-y₂)²]",
+    "threshold_type": "relative",
+    "threshold_factor": 100.0,
+    "criterion": "Balls have diverged when d(t) > threshold_factor × d(0)",
+    "physical_meaning": "When spatial separation exceeds 100× initial separation, trajectories are considered divergent",
+    "alternative_criterion": "Different bounce count (balls hit different parts of parabola)"
+  },
+
+  "collision_detection": {
+    "method": "Event detection during integration",
+    "event_function": "y - x² = 0",
+    "direction": "approaching (vy < 0 or moving toward curve)",
+    "precision": "1e-10 m"
+  },
+
+  "elastic_reflection_physics": {
+    "description": "When ball hits curve at point (x_c, x_c²)",
+    "tangent_vector": "t̂ = (1, 2x_c) / √(1 + 4x_c²)",
+    "normal_vector": "n̂ = (-2x_c, 1) / √(1 + 4x_c²)",
+    "reflection_formula": "v_after = v_before - 2(v_before · n̂)n̂",
+    "energy_check": "|v_after| = |v_before|"
+  },
+
+  "study_objectives": [
+    "Implement accurate collision detection with parabolic boundary",
+    "Compute elastic reflection velocities correctly",
+    "Track two balls with nearly identical initial conditions",
+    "Define precise divergence criterion",
+    "Measure divergence time for various initial separations",
+    "Analyze scaling: t_divergence vs δx",
+    "Visualize bouncing trajectories",
+    "Investigate connection to chaotic billiards"
+  ],
+
+  "expected_behavior": [
+    "Both balls fall and bounce repeatedly",
+    "Small differences amplified by nonlinear bounce dynamics",
+    "After several bounces, trajectories become uncorrelated",
+    "Divergence time increases as initial separation decreases",
+    "System exhibits sensitive dependence on initial conditions",
+    "May observe exponential separation (Lyapunov-like behavior)"
+  ],
+
+  "visualization_requirements": [
+    "Animate both balls bouncing on the parabola",
+    "Show trajectory trails",
+    "Highlight collision points",
+    "Plot separation distance vs time",
+    "Plot divergence time vs initial separation",
+    "Phase space visualization",
+    "Bounce count comparison"
+  ],
+
+  "parameter_sweep": {
+    "primary_variable": "delta_x",
+    "range_type": "logarithmic",
+    "min": 1e-6,
+    "max": 0.01,
+    "num_samples": 25
+  },
+
+  "numerical_considerations": {
+    "integration_method": "RK45 or DOP853 with event detection",
+    "tolerance": "Very tight (1e-12) for chaos study",
+    "max_bounces": 100,
+    "max_time": 30.0,
+    "energy_conservation_check": true
+  }
+}

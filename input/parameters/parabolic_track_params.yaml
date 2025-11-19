@@ -1,0 +1,74 @@
+# Parameter configuration for Parabolic Track Divergence Study
+
+# Physical parameters
+physics:
+  g: 9.80665      # Gravitational acceleration (m/s²)
+  m: 1.0          # Mass of balls (kg) - cancels out but kept for completeness
+
+# Initial conditions for ball 1
+initial_conditions:
+  x1_0: -2.0      # Initial x-position (m)
+  v1_0: 0.0       # Initial x-velocity (m/s)
+
+# Initial separation study
+separation_study:
+  # Ball 2 starts at x2_0 = x1_0 + delta_x
+  delta_x_min: 1.0e-6    # Minimum separation (m)
+  delta_x_max: 0.1       # Maximum separation (m)
+  num_separations: 20    # Number of different separations to test
+  spacing: 'logarithmic' # 'linear' or 'logarithmic'
+
+# Divergence criterion
+divergence:
+  metric: 'euclidean'          # Distance in (x,y) space
+  threshold_type: 'relative'   # 'relative' or 'absolute'
+  threshold_factor: 10.0       # Diverged when d(t) > threshold_factor × d(0)
+  # Alternative absolute threshold:
+  # threshold_absolute: 0.5    # Diverged when d(t) > 0.5 m
+  max_time_if_no_divergence: 50.0  # Maximum time to simulate (s)
+
+# Simulation parameters
+simulation:
+  t_start: 0.0
+  t_end: 50.0            # Will stop early if divergence detected
+  dt_output: 0.01        # Output timestep (s)
+  solver: 'DOP853'       # High-order Runge-Kutta (8th order)
+  tolerance_abs: 1.0e-12 # Very tight tolerance for chaos study
+  tolerance_rel: 1.0e-10
+  max_step: 0.01         # Maximum integration step
+
+# Energy conservation check
+energy_check:
+  enabled: true
+  tolerance: 1.0e-6      # Relative energy error tolerance
+
+# Visualization parameters
+visualization:
+  animate_trajectories: true
+  show_both_balls: true
+  trail_length: 200
+  animation_duration: 10    # seconds
+  fps: 60
+
+  # Which plots to generate
+  plots:
+    trajectory_overlay: true
+    separation_vs_time: true
+    divergence_time_vs_separation: true
+    phase_space: true
+    energy_conservation: true
+    log_log_analysis: true
+
+# Output parameters
+output:
+  save_data: true
+  save_plots: true
+  save_animation: true
+  generate_report: true
+  report_format: 'markdown'
+
+# Analysis options
+analysis:
+  fit_power_law: true           # Fit t_div ∝ (δx)^α
+  estimate_lyapunov: false      # Estimate Lyapunov exponent (advanced)
+  compare_analytical: false     # Compare with small oscillation approximation
