@@ -63,4 +63,28 @@ Configuration files and settings
 
 ## Getting Started
 
+### Quick Start - Run Example Study
+
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the bouncing balls divergence study
+python3 run_bouncing_balls_study.py
+
+# View results
+ls outputs/visuals/$(ls -t outputs/visuals/ | head -1)/
+```
+
+### Example Outputs
+
+See **`outputs/examples/`** for example results from a complete study run:
+- `divergence_time_vs_separation.png` - Main result plot showing chaos
+- `trajectory_dx1.00e-04.png` - Trajectory comparison for both balls
+- `STUDY_REPORT.md` - Complete analysis with results table
+
+All outputs (plots, animations, data, reports) are generated in timestamped directories under `outputs/`.
+
+### Documentation
+
 See individual folder READMEs for detailed information about each component.
