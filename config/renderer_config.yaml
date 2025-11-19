@@ -1,0 +1,63 @@
+# Renderer Configuration
+
+# Matplotlib settings
+matplotlib:
+  backend: 'Agg'
+  style: 'seaborn-v0_8-darkgrid'
+  figure_size: [10, 6]
+  dpi: 300
+  line_width: 2
+  marker_size: 6
+  font_size: 12
+  title_size: 14
+  label_size: 12
+  legend_size: 10
+
+# Manim settings (if available)
+manim:
+  quality: 'high'  # low, medium, high, ultra
+  fps: 60
+  background_color: '#FFFFFF'
+  preview: false
+  save_last_frame: true
+
+# Plotly settings (interactive plots)
+plotly:
+  template: 'plotly_white'
+  width: 1000
+  height: 600
+
+# 3D visualization
+visualization_3d:
+  backend: 'matplotlib'  # matplotlib, mayavi, pyvista
+  elevation: 30
+  azimuth: 45
+
+# Color schemes
+colors:
+  primary: '#1f77b4'
+  secondary: '#ff7f0e'
+  accent: '#2ca02c'
+  error: '#d62728'
+  neutral: '#7f7f7f'
+
+  # Sequential colormap
+  sequential: 'viridis'
+
+  # Diverging colormap
+  diverging: 'RdBu'
+
+# Animation settings
+animation:
+  default_duration: 10  # seconds
+  fps: 30
+  bitrate: 2000  # kbps for video
+  codec: 'h264'
+  writer: 'ffmpeg'
+
+# Export formats
+export:
+  image_formats: ['png', 'pdf', 'svg']
+  video_formats: ['mp4', 'gif']
+  default_image: 'png'
+  default_video: 'mp4'

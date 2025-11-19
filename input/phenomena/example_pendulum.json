@@ -1,0 +1,115 @@
+{
+  "name": "Simple Pendulum",
+  "description": "A point mass suspended by a massless, inextensible string undergoing oscillation under gravity",
+  "category": "Classical Mechanics",
+  "difficulty": "Intermediate",
+
+  "governing_laws": [
+    "Newton's Second Law",
+    "Gravitational Force",
+    "Restoring Torque"
+  ],
+
+  "variables": {
+    "theta": {
+      "description": "Angular displacement from vertical",
+      "symbol": "θ",
+      "units": "radians",
+      "typical_range": [-3.14, 3.14]
+    },
+    "omega": {
+      "description": "Angular velocity",
+      "symbol": "ω",
+      "units": "rad/s",
+      "typical_range": [-10, 10]
+    },
+    "L": {
+      "description": "Length of pendulum",
+      "symbol": "L",
+      "units": "m",
+      "typical_range": [0.1, 10.0]
+    },
+    "m": {
+      "description": "Mass of bob",
+      "symbol": "m",
+      "units": "kg",
+      "typical_range": [0.01, 10.0]
+    },
+    "g": {
+      "description": "Gravitational acceleration",
+      "symbol": "g",
+      "units": "m/s²",
+      "default": 9.80665
+    }
+  },
+
+  "equations": {
+    "equation_of_motion": "d²θ/dt² = -(g/L)sin(θ)",
+    "small_angle_approximation": "d²θ/dt² ≈ -(g/L)θ",
+    "period_linear": "T = 2π√(L/g)",
+    "energy": "E = (1/2)mL²(dθ/dt)² + mgL(1-cos(θ))"
+  },
+
+  "initial_conditions": {
+    "theta_0": {
+      "description": "Initial angle",
+      "default": 0.5,
+      "units": "radians"
+    },
+    "omega_0": {
+      "description": "Initial angular velocity",
+      "default": 0.0,
+      "units": "rad/s"
+    }
+  },
+
+  "parameters": {
+    "L": {
+      "default": 1.0,
+      "units": "m"
+    },
+    "m": {
+      "default": 1.0,
+      "units": "kg"
+    },
+    "g": {
+      "default": 9.80665,
+      "units": "m/s²"
+    }
+  },
+
+  "interesting_regimes": [
+    {
+      "name": "Small Oscillations",
+      "condition": "θ << 1",
+      "behavior": "Simple harmonic motion, period independent of amplitude"
+    },
+    {
+      "name": "Large Oscillations",
+      "condition": "θ ~ π/2",
+      "behavior": "Nonlinear, period depends on amplitude"
+    },
+    {
+      "name": "Over-the-top",
+      "condition": "E > 2mgL",
+      "behavior": "Continuous rotation rather than oscillation"
+    }
+  ],
+
+  "study_objectives": [
+    "Derive equation of motion from Newton's laws",
+    "Analyze small angle approximation validity",
+    "Compute period as function of amplitude",
+    "Visualize phase space trajectories",
+    "Explore energy conservation",
+    "Compare numerical vs analytical solutions"
+  ],
+
+  "visualization_suggestions": [
+    "Animation of pendulum motion",
+    "Phase space plot (θ vs ω)",
+    "Energy plot over time",
+    "Period vs amplitude curve",
+    "Comparison of different initial conditions"
+  ]
+}

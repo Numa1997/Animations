@@ -1,0 +1,51 @@
+# Physics Study Generator - System Configuration
+
+# Default solver settings
+defaults:
+  solver: 'scipy_solve_ivp'
+  method: 'RK45'  # Runge-Kutta 4(5)
+  tolerance_abs: 1.0e-8
+  tolerance_rel: 1.0e-6
+  max_timestep: 0.1
+  min_timestep: 1.0e-6
+
+# Output settings
+output:
+  base_dir: './outputs'
+  save_intermediate: false
+  create_timestamp_dirs: true
+  overwrite_existing: false
+
+# Visualization settings
+visualization:
+  default_renderer: 'matplotlib'
+  dpi: 300
+  figure_format: 'png'
+  animation_format: 'mp4'
+  animation_fps: 30
+  animation_dpi: 150
+  interactive: false
+
+# Simulation settings
+simulation:
+  default_duration: 10.0  # seconds
+  default_timestep: 0.01  # seconds
+  save_frequency: 1  # save every N steps
+
+# Parameter space exploration
+parameter_space:
+  default_samples: 50
+  parallel: true
+  max_workers: 4
+
+# Logging
+logging:
+  level: 'INFO'  # DEBUG, INFO, WARNING, ERROR
+  file: 'physics_study.log'
+  console: true
+
+# Resource limits
+resources:
+  max_memory_gb: 8
+  max_simulation_time: 3600  # seconds
+  warn_on_slow: true
