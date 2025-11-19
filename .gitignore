@@ -60,7 +60,7 @@ outputs/videos/*
 
 # Keep example outputs for demonstration
 !outputs/examples/
-!outputs/examples/*
+!outputs/examples/**
 
 # Logs
 *.log
@@ -82,8 +82,10 @@ logs/
 *.avi
 *.mov
 *.gif
-# Exception: keep small example gifs
+# Exception: keep example outputs
 !examples/**/*.gif
+!outputs/examples/**/*.gif
+!outputs/examples/**/*.mp4
 
 # Compiled LaTeX
 *.aux
