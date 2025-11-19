@@ -17,6 +17,14 @@ Example trajectory comparison showing:
 - Divergence information
 - Initial separation: 100 micrometers
 
+### 🎬 `bouncing_balls_dx5e-04_comparison.gif`
+**Advanced 3-panel comparison video!** (590 KB)
+- Left panel: Animated bouncing balls on parabola
+- Top right: Real-time separation distance plot
+- Bottom right: Phase space trajectory (position vs velocity)
+- Shows complete divergence dynamics
+- Initial separation: 500 micrometers
+
 ### 📄 `STUDY_REPORT.md`
 Complete study report with:
 - Results table for all 25 simulations
@@ -55,21 +63,34 @@ After running `python3 run_bouncing_balls_study.py`, look for:
 
 ## Running Your Own Study
 
+### Full Study (25 simulations)
 ```bash
-# Install dependencies
 pip install -r requirements.txt
-
-# Run the study
 python3 run_bouncing_balls_study.py
+```
+Generates: 12+ plots, 25 data files, report (~2-3 MB total)
 
-# Check outputs
-ls -lh outputs/visuals/$(ls -t outputs/visuals/ | head -1)/
+### Quick Video Generation
+```bash
+# Generate videos for specific separation
+python3 generate_videos.py 1e-4
+
+# Or run with different separations
+python3 generate_videos.py 1e-3
+python3 generate_videos.py 5e-5
 ```
 
-This will generate:
-- 📊 12+ visualization files (~1.5 MB)
-- 💾 25 simulation data files
-- 📄 Complete study report
-- 🎬 Animated GIF of bouncing dynamics
+Generates:
+- Simple animation: Just bouncing balls
+- Comparison video: 3-panel view with analysis
+- Both as high-quality GIF animations (~600 KB each)
 
-Total output size: ~2-3 MB per study run.
+### Video Types Available
+
+1. **Simple Animation**: Clean view of both balls bouncing
+2. **Comparison Video**: Advanced 3-panel layout
+   - Main trajectory with trails
+   - Real-time separation plot
+   - Phase space evolution
+
+Total output: ~1 MB per video pair, 30 fps, smooth motion

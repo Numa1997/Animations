@@ -198,8 +198,8 @@ class BouncingBallsVisualizer:
 
         return fig
 
-    def create_animation(self, result, fps: int = 30, duration: float = 10.0,
-                        save_path: Optional[str] = None):
+    def create_animation(self, result, fps: int = 60, duration: float = 10.0,
+                        save_path: Optional[str] = None, format: str = 'mp4'):
         """
         Create animation of both balls bouncing.
 
@@ -208,11 +208,13 @@ class BouncingBallsVisualizer:
         result : DivergenceResult
             Results containing trajectories
         fps : int
-            Frames per second
+            Frames per second (default 60 for smooth video)
         duration : float
             Target animation duration (s)
         save_path : str, optional
             Path to save animation
+        format : str
+            Output format: 'mp4', 'gif', or 'both'
         """
         traj1 = result.trajectory_1
         traj2 = result.trajectory_2
@@ -277,9 +279,27 @@ class BouncingBallsVisualizer:
                                       blit=True)
 
         if save_path:
-            print(f"Saving animation to {save_path}...")
-            anim.save(save_path, writer='pillow', fps=fps)
-            print(f"Animation saved!")
+            import os
+            base_path = os.path.splitext(save_path)[0]
+
+            if format in ['mp4', 'both']:
+                mp4_path = base_path + '.mp4'
+                print(f"Saving MP4 video to {mp4_path}...")
+                try:
+                    anim.save(mp4_path, writer='ffmpeg', fps=fps,
+                             extra_args=['-vcodec', 'libx264', '-pix_fmt', 'yuv420p'],
+                             dpi=150)
+                    print(f"MP4 video saved! ({fps} fps)")
+                except Exception as e:
+                    print(f"MP4 save failed (ffmpeg not available?): {e}")
+                    print("Falling back to GIF...")
+                    format = 'gif'
+
+            if format in ['gif', 'both']:
+                gif_path = base_path + '.gif'
+                print(f"Saving GIF animation to {gif_path}...")
+                anim.save(gif_path, writer='pillow', fps=min(fps, 30))
+                print(f"GIF animation saved!")
 
         return anim, fig
 

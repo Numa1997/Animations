@@ -156,22 +156,50 @@ class BouncingBallsStudyRunner:
         save_path = self.output_dirs['visuals'] / 'divergence_time_vs_separation.png'
         self.viz.plot_divergence_analysis(self.results, save_path=save_path)
 
-        # 4. Create animation for one case
+        # 4. Create animations and videos
         if viz_params.get('animate_trajectories', False):
-            print("\nCreating animation (this may take a while)...")
-            # Pick a middle case
-            idx_mid = len(self.results) // 2
-            result = self.results[idx_mid]
-            save_path = self.output_dirs['visuals'] / f'animation_dx{result.delta_x:.2e}.gif'
-            try:
-                self.viz.create_animation(
-                    result,
-                    fps=30,
-                    duration=min(10, result.t_divergence if result.diverged else 10),
-                    save_path=save_path
-                )
-            except Exception as e:
-                print(f"  Animation failed: {e}")
+            print("\nCreating animations and videos (this may take a while)...")
+
+            # Pick a few interesting cases
+            indices_to_animate = [
+                len(self.results) // 4,  # Early case
+                len(self.results) // 2,  # Middle case
+                3 * len(self.results) // 4  # Late case
+            ]
+
+            for i, idx in enumerate(indices_to_animate):
+                if idx >= len(self.results):
+                    continue
+
+                result = self.results[idx]
+                base_name = f'animation_dx{result.delta_x:.2e}'
+                save_path = self.output_dirs['visuals'] / base_name
+
+                print(f"\n  [{i+1}/{len(indices_to_animate)}] Creating video for δx = {result.delta_x:.2e} m...")
+
+                try:
+                    # Create MP4 video (high quality, 60 fps)
+                    self.viz.create_animation(
+                        result,
+                        fps=60,
+                        duration=min(15, result.t_divergence if result.diverged else 10),
+                        save_path=str(save_path),
+                        format='mp4'
+                    )
+                except Exception as e:
+                    print(f"  Video generation failed: {e}")
+                    print(f"  Trying GIF fallback...")
+                    try:
+                        # Fallback to GIF
+                        self.viz.create_animation(
+                            result,
+                            fps=30,
+                            duration=min(10, result.t_divergence if result.diverged else 10),
+                            save_path=str(save_path),
+                            format='gif'
+                        )
+                    except Exception as e2:
+                        print(f"  GIF generation also failed: {e2}")
 
         print("\nVISUALIZATIONS COMPLETE")
         print("=" * 70)
