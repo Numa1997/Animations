@@ -154,7 +154,7 @@ def test_energy_conservation(tolerance=1e-3):
 
     print(f"\nSimulation completed:")
     print(f"  Duration: {traj['t'][-1]:.2f} s")
-    print(f"  Bounces: {len(traj['bounces'])}")
+    print(f"  Bounces: {traj['bounces']['count']}")
     print(f"  Total points: {len(traj['t'])}")
 
     # Calculate energy at each point
