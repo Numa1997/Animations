@@ -1,0 +1,120 @@
+# Parameter configuration for Bouncing Balls on Parabola - Divergence Study
+
+# Physical parameters
+physics:
+  g: 9.80665      # Gravitational acceleration (m/s²)
+  restitution: 1.0  # Coefficient of restitution (1.0 = perfectly elastic)
+
+# Initial conditions for ball 1
+initial_conditions:
+  x1_0: -2.0      # Initial x-position (m)
+  y1_0: 5.0       # Initial y-position (m) - above the parabola
+  vx1_0: 0.0      # Initial x-velocity (m/s)
+  vy1_0: 0.0      # Initial y-velocity (m/s) - dropped from rest
+
+# Initial separation study
+# Ball 2 starts at (x1_0 + delta_x, y1_0 + delta_y)
+separation_study:
+  delta_x_min: 1.0e-6    # Minimum separation (m)
+  delta_x_max: 0.01      # Maximum separation (m)
+  delta_y: 0.0           # Vertical separation (m) - keep same height
+  num_separations: 25    # Number of different separations to test
+  spacing: 'logarithmic' # 'linear' or 'logarithmic'
+
+# Divergence criterion
+divergence:
+  metric: 'euclidean_2d'       # Distance in (x,y) physical space
+  threshold_type: 'relative'   # 'relative' or 'absolute'
+  threshold_factor: 100.0      # Diverged when d(t) > 100 × d(0)
+
+  # Alternative: absolute threshold
+  # threshold_type: 'absolute'
+  # threshold_value: 1.0       # Diverged when d(t) > 1.0 m
+
+  # Stop conditions
+  max_time_if_no_divergence: 30.0  # Maximum simulation time (s)
+  max_bounces: 100                  # Maximum number of bounces
+
+# Collision detection
+collision:
+  event_function: 'y - x**2'       # Zero when ball touches parabola
+  tolerance: 1.0e-10                # Collision detection precision (m)
+  direction: 'approaching'          # Only detect when moving toward curve
+
+# Simulation parameters
+simulation:
+  t_start: 0.0
+  t_end: 30.0                # Maximum time (will stop at divergence)
+  dt_output: 0.01            # Output sampling rate (s)
+  solver: 'DOP853'           # 8th order Runge-Kutta with event detection
+  tolerance_abs: 1.0e-12     # Very tight for chaos
+  tolerance_rel: 1.0e-10
+  max_step: 0.01             # Maximum integration step (s)
+
+# Energy conservation check
+energy_check:
+  enabled: true
+  check_frequency: 'every_bounce'  # Check at each bounce
+  tolerance: 1.0e-8                # Relative energy error tolerance
+  warning_threshold: 1.0e-6        # Warn if error exceeds this
+
+# Visualization parameters
+visualization:
+  # Animation settings
+  animate_trajectories: true
+  show_both_balls: true
+  show_parabola: true
+  trail_length: 300          # Number of points in trajectory trail
+  animation_real_time: false # If true, play at actual speed
+  animation_duration: 15     # Target animation duration (s)
+  fps: 60
+
+  # Highlight bounces
+  show_bounce_points: true
+  bounce_marker_size: 50
+
+  # Color coding
+  ball1_color: '#1f77b4'  # Blue
+  ball2_color: '#ff7f0e'  # Orange
+  parabola_color: '#2ca02c'  # Green
+
+  # Plot settings
+  plots:
+    trajectory_overlay: true
+    separation_vs_time: true
+    divergence_time_vs_separation: true
+    phase_space_x: true          # x vs vx
+    phase_space_y: true          # y vs vy
+    energy_conservation: true
+    log_log_analysis: true
+    bounce_count_comparison: true
+    velocity_magnitude: true
+
+  # Axis limits (auto if not specified)
+  xlim: [-3, 3]
+  ylim: [0, 6]
+
+# Output parameters
+output:
+  save_data: true
+  save_plots: true
+  save_animation: true
+  generate_report: true
+  report_format: 'markdown'
+
+  # Data formats
+  trajectory_format: 'csv'      # csv, npz, hdf5
+  summary_format: 'json'
+
+# Analysis options
+analysis:
+  fit_power_law: true           # Fit t_div ∝ (δx)^α
+  estimate_lyapunov: true       # Estimate Lyapunov exponent from divergence
+  statistical_analysis: true    # Mean, std of bounce heights, velocities
+  compare_bounce_counts: true   # Track when bounce counts differ
+
+# Debug options
+debug:
+  verbose: false
+  plot_each_separation: false   # Generate individual plots for each δx
+  save_bounce_data: true        # Save detailed bounce information
