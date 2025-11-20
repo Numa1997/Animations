@@ -180,6 +180,23 @@ class BouncingBallSolver:
             - 'bounces': list of bounce times and positions
             - 'energy': energy conservation check
         """
+        # CRITICAL: Validate initial conditions
+        parabola_height = self.a * x0**2
+        if y0 <= parabola_height:
+            raise ValueError(
+                f"Ball starts below/on parabola: y0={y0:.6f} but a*x0²={parabola_height:.6f}. "
+                f"Must have y0 > a*x0² to start above the curve."
+            )
+
+        if t_end <= 0:
+            raise ValueError(f"t_end must be positive, got {t_end}")
+
+        if self.a <= 0:
+            raise ValueError(f"Parabola steepness 'a' must be positive, got {self.a}")
+
+        if max_bounces < 1:
+            raise ValueError(f"max_bounces must be at least 1, got {max_bounces}")
+
         self.reset_trajectory()
 
         state = np.array([x0, y0, vx0, vy0])

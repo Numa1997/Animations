@@ -98,7 +98,7 @@ def collision_event(t: float, state: np.ndarray, g: float = 9.80665,
         Event function h = y - a*x²
     """
     x, y, vx, vy = state
-    return y - a*x**2
+    return y - a*x**2  # No buffer - event detection handles re-triggers naturally
 
 def is_approaching(state: np.ndarray, a: float = 1.0) -> bool:
     """
@@ -127,7 +127,11 @@ def normal_vector(x_c: float, a: float = 1.0) -> Tuple[float, float]:
 
     For parabola y = a*x², the tangent has slope dy/dx = 2*a*x_c.
     Tangent vector: (1, 2*a*x_c)
-    Normal vector (perpendicular, pointing inward): (-2*a*x_c, 1)
+    Normal vector (perpendicular, pointing OUTWARD): (2*a*x_c, 1)
+
+    The outward normal points away from the parabola interior (below the curve).
+    At x > 0 (right side), it points RIGHT and UP.
+    At x < 0 (left side), it points LEFT and UP.
 
     Parameters
     ----------
@@ -139,10 +143,10 @@ def normal_vector(x_c: float, a: float = 1.0) -> Tuple[float, float]:
     Returns
     -------
     tuple
-        (nx, ny) - normalized normal vector components
+        (nx, ny) - normalized normal vector components pointing OUTWARD
     """
     norm = np.sqrt(1 + 4*a**2*x_c**2)
-    return (-2*a*x_c / norm, 1.0 / norm)
+    return (2*a*x_c / norm, 1.0 / norm)  # FIXED: Positive sign for outward normal
 
 def tangent_vector(x_c: float, a: float = 1.0) -> Tuple[float, float]:
     """
