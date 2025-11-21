@@ -203,20 +203,20 @@ def reflect_velocity_direct(vx: float, vy: float, x_c: float, a: float = 1.0) ->
     """
     Direct formula for reflected velocity (optimized).
 
+    ❌ DEPRECATED: This function uses pre-derived formulas that were based on
+    the OLD WRONG normal vector with negative sign. Use reflect_velocity() instead!
+
     Derived formulae for y = a*x²:
 
-    Normal: n̂ = (-2ax_c, 1) / √(1 + 4a²x_c²)
+    OLD WRONG Normal: n̂ = (-2ax_c, 1) / √(1 + 4a²x_c²)  ❌ WRONG SIGN!
+    CORRECT Normal: n̂ = (+2ax_c, 1) / √(1 + 4a²x_c²)   ✅ CORRECT!
 
-    v·n̂ = (-2ax_c·vx + vy) / √(1 + 4a²x_c²)
+    v·n̂ = (2ax_c·vx + vy) / √(1 + 4a²x_c²)  [CORRECTED]
 
     Reflection v' = v - 2(v·n̂)n̂:
 
-    vx' = [vx(1 - 4a²x_c²) + 4ax_c·vy] / (1 + 4a²x_c²)
-    vy' = [4ax_c·vx + vy(4a²x_c² - 1)] / (1 + 4a²x_c²)
-
-    When a=1, reduces to:
-    vx' = [vx(1 - 4x_c²) + 4x_c·vy] / (1 + 4x_c²)
-    vy' = [4x_c·vx + vy(4x_c² - 1)] / (1 + 4x_c²)
+    vx' = [vx(1 - 4a²x_c²) - 4ax_c·vy] / (1 + 4a²x_c²)  [CORRECTED]
+    vy' = [-4ax_c·vx + vy(4a²x_c² - 1)] / (1 + 4a²x_c²)  [CORRECTED]
 
     Parameters
     ----------
@@ -231,10 +231,15 @@ def reflect_velocity_direct(vx: float, vy: float, x_c: float, a: float = 1.0) ->
     -------
     tuple
         (vx', vy') - velocity components after collision
+
+    Warning
+    -------
+    DEPRECATED: Formulas corrected but use reflect_velocity() for clarity.
     """
+    # CORRECTED formulas with positive normal vector sign
     denom = 1.0 + 4*a**2*x_c**2
-    vx_new = (vx*(1 - 4*a**2*x_c**2) + 4*a*x_c*vy) / denom
-    vy_new = (4*a*x_c*vx + vy*(4*a**2*x_c**2 - 1)) / denom
+    vx_new = (vx*(1 - 4*a**2*x_c**2) - 4*a*x_c*vy) / denom  # Sign flipped
+    vy_new = (-4*a*x_c*vx + vy*(4*a**2*x_c**2 - 1)) / denom  # Sign flipped
     return vx_new, vy_new
 
 # Energy calculations
